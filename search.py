@@ -67,6 +67,15 @@ def tinyMazeSearch(problem):
     Returns a sequence of moves that solves tinyMaze.  For any other maze, the
     sequence of moves will be incorrect, so only use this for tinyMaze.
     """
+    bool found = False
+    stack = util.Stack
+    stack.push(, problem.getStartState())
+    while !found
+        top = stack.pop
+        top.
+    print "Start:", problem.getStartState()
+    print "Is the start a goal?", problem.isGoalState(problem.getStartState())
+    print "Start's successors:", problem.getSuccessors(problem.getStartState())
     from game import Directions
     s = Directions.SOUTH
     w = Directions.WEST
@@ -87,6 +96,7 @@ def depthFirstSearch(problem):
     print "Start's successors:", problem.getSuccessors(problem.getStartState())
     """
     "*** YOUR CODE HERE ***"
+    
     util.raiseNotDefined()
 
 def breadthFirstSearch(problem):
