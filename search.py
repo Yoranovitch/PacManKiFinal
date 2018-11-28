@@ -67,6 +67,7 @@ def tinyMazeSearch(problem):
     Returns a sequence of moves that solves tinyMaze.  For any other maze, the
     sequence of moves will be incorrect, so only use this for tinyMaze.
     """
+    #robert was hier
     bool found = False
     stack = util.Stack
     stack.push(, problem.getStartState())
