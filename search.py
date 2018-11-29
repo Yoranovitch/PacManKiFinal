@@ -66,16 +66,12 @@ def tinyMazeSearch(problem):
     """
     Returns a sequence of moves that solves tinyMaze.  For any other maze, the
     sequence of moves will be incorrect, so only use this for tinyMaze.
-    """
-    bool found = False
-    stack = util.Stack
-    stack.push(, problem.getStartState())
-    while !found
-        top = stack.pop
-        top.
+    """    
+    
     print "Start:", problem.getStartState()
     print "Is the start a goal?", problem.isGoalState(problem.getStartState())
     print "Start's successors:", problem.getSuccessors(problem.getStartState())
+    print(type(problem))
     from game import Directions
     s = Directions.SOUTH
     w = Directions.WEST
@@ -96,8 +92,35 @@ def depthFirstSearch(problem):
     print "Start's successors:", problem.getSuccessors(problem.getStartState())
     """
     "*** YOUR CODE HERE ***"
+    found = False
+    graph = Graph()
+    graph.CreateGraph((10,10))
+    stack = util.Stack()
+    stack.push(problem.getStartState())
+    path = util.Queue()
+    path.push(problem.getStartState())
+    finalpath = []
+    children = problem.getSuccessors(problem.getStartState())
+    while not found:        
+        for c in children:            
+            if not graph.CheckPlace(c[0]):
+                graph.FillPlace(c[0])                  
+                stack.push(c)
+        head = stack.pop
+        print head
+        path.push(head)
+        children = problem.getSuccessors(head)
+        if problem.isGoalState(head):
+            found = True
+            break
+        while not children:
+            path.pop()
+            head = stack.pop
+            children = problem.getSuccessors(head)
+    while not path.isEmpty():
+        finalpath += GetDirection(path.pop()[2])
+    return finalpath
     
-    util.raiseNotDefined()
 
 def breadthFirstSearch(problem):
     """Search the shallowest nodes in the search tree first."""
@@ -121,6 +144,33 @@ def aStarSearch(problem, heuristic=nullHeuristic):
     "*** YOUR CODE HERE ***"
     util.raiseNotDefined()
 
+def GetPosition(self, instance):
+    return instance[1]
+
+def GetDirection(direction):
+    from game import Directions
+    if Directions == 'North':
+        return Directions.NORTH
+    elif Directions == 'East':
+        return Direction.East
+    elif Directions == 'South':
+        return Direction.SOUTH
+    return Direction.WEST
+
+class Graph:
+    matrix = [[]]
+
+    def CreateGraph(self, position):
+        global matrix
+        matrix = [[False for x in range(position[0])] for y in range(position[1])] 
+        return matrix
+    
+    def FillPlace(self, position):
+        global matrix
+        matrix [(position[0])][(position[1])] = True
+
+    def CheckPlace(self, position):
+        return matrix [(position[0])][(position[1])]
 
 # Abbreviations
 bfs = breadthFirstSearch
