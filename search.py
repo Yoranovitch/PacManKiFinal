@@ -93,26 +93,30 @@ def depthFirstSearch(problem):
     "*** YOUR CODE HERE ***"
     found = False
     graph = Graph()
-    graph.CreateGraph((50,50))
+    graph.CreateGraph((500,500))
     stack = util.Stack()
     path = util.Stack()
     pathh = util.Stack()
     finalpath = []
     children = problem.getSuccessors(problem.getStartState())
+    graph.FillPlace(problem.getStartState())
     while not found:        
         for c in children:            
             if not graph.CheckPlace(c[0]):
-                graph.FillPlace(c[0])                  
+                graph.FillPlace(c[0])
+                print c                 
                 stack.push(c)
         head = stack.pop()
         path.push(head)
-        children = problem.getSuccessors(head[0])
-        if problem.isGoalState(head[0]):            
+        if problem.isGoalState(head[0]):   
             found = True
             break
-        while not children:
-            path.pop()
-            head = stack.pop
+        children = problem.getSuccessors(head[0])
+        while children == []:            
+            a = path.pop()
+            print a
+            print '400'
+            head = stack.pop()
             children = problem.getSuccessors(head)
     while not path.isEmpty():
         a = path.pop()
