@@ -71,7 +71,6 @@ def tinyMazeSearch(problem):
     print "Start:", problem.getStartState()
     print "Is the start a goal?", problem.isGoalState(problem.getStartState())
     print "Start's successors:", problem.getSuccessors(problem.getStartState())
-    print(type(problem))
     from game import Directions
     s = Directions.SOUTH
     w = Directions.WEST
@@ -94,11 +93,10 @@ def depthFirstSearch(problem):
     "*** YOUR CODE HERE ***"
     found = False
     graph = Graph()
-    graph.CreateGraph((10,10))
+    graph.CreateGraph((50,50))
     stack = util.Stack()
-    stack.push(problem.getStartState())
-    path = util.Queue()
-    path.push(problem.getStartState())
+    path = util.Stack()
+    pathh = util.Stack()
     finalpath = []
     children = problem.getSuccessors(problem.getStartState())
     while not found:        
@@ -106,11 +104,10 @@ def depthFirstSearch(problem):
             if not graph.CheckPlace(c[0]):
                 graph.FillPlace(c[0])                  
                 stack.push(c)
-        head = stack.pop
-        print head
+        head = stack.pop()
         path.push(head)
-        children = problem.getSuccessors(head)
-        if problem.isGoalState(head):
+        children = problem.getSuccessors(head[0])
+        if problem.isGoalState(head[0]):            
             found = True
             break
         while not children:
@@ -118,7 +115,10 @@ def depthFirstSearch(problem):
             head = stack.pop
             children = problem.getSuccessors(head)
     while not path.isEmpty():
-        finalpath += GetDirection(path.pop()[2])
+        a = path.pop()
+        pathh.push(a)
+    while not pathh.isEmpty():
+        finalpath.append(GetDirection(pathh.pop()[1]))
     return finalpath
     
 
@@ -145,17 +145,23 @@ def aStarSearch(problem, heuristic=nullHeuristic):
     util.raiseNotDefined()
 
 def GetPosition(self, instance):
-    return instance[1]
+    return instance[0]
 
 def GetDirection(direction):
     from game import Directions
-    if Directions == 'North':
-        return Directions.NORTH
-    elif Directions == 'East':
-        return Direction.East
-    elif Directions == 'South':
-        return Direction.SOUTH
-    return Direction.WEST
+    n = Directions.NORTH
+    e = Directions.EAST
+    s = Directions.SOUTH
+    w = Directions.WEST
+    if direction == 'North':
+        return n
+    if direction == 'East':
+        return e
+    if direction == 'South':
+        return s
+    if direction == 'West':
+        return w
+
 
 class Graph:
     matrix = [[]]
