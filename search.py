@@ -106,6 +106,8 @@ def depthFirstSearch(problem):
                 nondouble.append(c)
                 graph.FillPlace(c[0])                      
                 stack.push(c)
+        #if more than one child are created, remember the parent that created them so that path knows where to stop backing up
+        #when it needs to find a new branch after a dead end
         i = 0
         while i < len(nondouble) - 1:
             crossroads.push(head)
@@ -115,6 +117,7 @@ def depthFirstSearch(problem):
             head = stack.pop()            
             pathhead = path.pop()
             splitpoint = crossroads.pop()
+            #back up until path reaches the last 'crossroad' it encountered, and then add it to path again (since you popped it to read its value)
             while not pathhead == splitpoint:
                 pathhead = path.pop()
                 if path.isEmpty() == True:
@@ -128,13 +131,10 @@ def depthFirstSearch(problem):
             found = True
     
     finalpath = []
-    print 'done'
     #convert all tuples in path to directional commands and put them in a list
     #reverse finalpath, we want the first commands that were added to be executed first    
     while not path.isEmpty():
-        a = path.pop()
-        print a
-        finalpath.append(GetDirection(a[1]))
+        finalpath.append(GetDirection(path.pop()[1]))
     finalpath.reverse()
     return finalpath  
 
