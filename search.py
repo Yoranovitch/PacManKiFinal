@@ -88,45 +88,54 @@ def depthFirstSearch(problem):
     """
     "*** YOUR CODE HERE ***"
     found = False
-    nondouble = []
     graph = Graph()
-    graph.CreateGraph((500,500))
+    graph.CreateGraph((100,100))
     stack = util.Stack()
+    crossroads = util.Stack()
     path = util.Stack()
-    pathh = util.Stack()
-    finalpath = []
-    head = (problem.getStartState(), 1)
+    head = (problem.getStartState(), 'Start', 1)
     graph.FillPlace(problem.getStartState())
+
     while not found:
+        #get all children of the last added node of the stack that are located on a tile which hasn't been previously visited
+        #GetChildren also updates the graph and stack, which keep track of all visited spots and all expended nodes respectively
         children = problem.getSuccessors(head[0])
-        nondouble = []     
+        nondouble = []
         for c in children:            
-            if not graph.CheckPlace(c[0]):
+            if not graph.CheckPlace(c[0]):                         
                 nondouble.append(c)
-                graph.FillPlace(c[0])                                
+                graph.FillPlace(c[0])                      
                 stack.push(c)
-        if not nondouble:
-            while not nondouble:
-                a = stack.pop()[0]
-                children = problem.getSuccessors(a)
-                print a
-                print path.pop()
-                for c in children:            
-                    if not graph.CheckPlace(c[0]):
-                        nondouble.append(c)
-                        graph.FillPlace(c[0])                                
-                        stack.push(c)
+        i = 0
+        while i < len(nondouble) - 1:
+            crossroads.push(head)
+            i += 1
+        #if a node is a dead end, go to the last added child and expand again, i.o.w. perform dfs
+        if not nondouble:                          
+            head = stack.pop()            
+            pathhead = path.pop()
+            splitpoint = crossroads.pop()
+            while not pathhead == splitpoint:
+                pathhead = path.pop()
+                if path.isEmpty() == True:
+                    break
+            if path.isEmpty() == False:           
+                path.push(pathhead) 
         else:
-            head = stack.pop()
+            head = stack.pop()          
         path.push(head)
         if problem.isGoalState(head[0]):   
-            found = True            
+            found = True
+    
+    finalpath = []
+    print 'done'
+    #convert all tuples in path to directional commands and put them in a list
+    #reverse finalpath, we want the first commands that were added to be executed first    
     while not path.isEmpty():
         a = path.pop()
-        pathh.push(a)
-    while not pathh.isEmpty():
-        a = pathh.pop()
+        print a
         finalpath.append(GetDirection(a[1]))
+    finalpath.reverse()
     return finalpath  
 
 def breadthFirstSearch(problem):
@@ -168,6 +177,16 @@ def GetDirection(direction):
         return s
     if direction == 'West':
         return w
+
+def GetChildren(node, graph, stack, problem):
+    children = problem.getSuccessors(node[0])
+    nondouble = []     
+    for c in children:            
+        if not graph.CheckPlace(c[0]):
+            nondouble.append(c)
+            graph.FillPlace(c[0])                                
+            stack.push(c)
+    return nondouble
 
 
 class Graph:
