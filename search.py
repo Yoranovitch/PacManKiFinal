@@ -67,10 +67,6 @@ def tinyMazeSearch(problem):
     Returns a sequence of moves that solves tinyMaze.  For any other maze, the
     sequence of moves will be incorrect, so only use this for tinyMaze.
     """    
-    
-    print "Start:", problem.getStartState()
-    print "Is the start a goal?", problem.isGoalState(problem.getStartState())
-    print "Start's successors:", problem.getSuccessors(problem.getStartState())
     from game import Directions
     s = Directions.SOUTH
     w = Directions.WEST
@@ -92,39 +88,46 @@ def depthFirstSearch(problem):
     """
     "*** YOUR CODE HERE ***"
     found = False
+    nondouble = []
     graph = Graph()
     graph.CreateGraph((500,500))
     stack = util.Stack()
     path = util.Stack()
     pathh = util.Stack()
     finalpath = []
-    children = problem.getSuccessors(problem.getStartState())
+    head = (problem.getStartState(), 1)
     graph.FillPlace(problem.getStartState())
-    while not found:        
+    while not found:
+        children = problem.getSuccessors(head[0])
+        nondouble = []     
         for c in children:            
             if not graph.CheckPlace(c[0]):
-                graph.FillPlace(c[0])
-                print c                 
+                nondouble.append(c)
+                graph.FillPlace(c[0])                                
                 stack.push(c)
-        head = stack.pop()
+        if not nondouble:
+            while not nondouble:
+                a = stack.pop()[0]
+                children = problem.getSuccessors(a)
+                print a
+                print path.pop()
+                for c in children:            
+                    if not graph.CheckPlace(c[0]):
+                        nondouble.append(c)
+                        graph.FillPlace(c[0])                                
+                        stack.push(c)
+        else:
+            head = stack.pop()
         path.push(head)
         if problem.isGoalState(head[0]):   
-            found = True
-            break
-        children = problem.getSuccessors(head[0])
-        while children == []:            
-            a = path.pop()
-            print a
-            print '400'
-            head = stack.pop()
-            children = problem.getSuccessors(head)
+            found = True            
     while not path.isEmpty():
         a = path.pop()
         pathh.push(a)
     while not pathh.isEmpty():
-        finalpath.append(GetDirection(pathh.pop()[1]))
-    return finalpath
-    
+        a = pathh.pop()
+        finalpath.append(GetDirection(a[1]))
+    return finalpath  
 
 def breadthFirstSearch(problem):
     """Search the shallowest nodes in the search tree first."""
