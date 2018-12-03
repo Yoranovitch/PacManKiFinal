@@ -94,7 +94,8 @@ def depthFirstSearch(problem):
     crossroads = util.Stack()
     path = util.Stack()
     head = (problem.getStartState(), 'Start', 1)
-    graph.FillPlace(problem.getStartState())
+    graph.FillPlace(head[0], head[0])
+    start = head[0]
 
     while not found:
         #get all children of the last added node of the stack that are located on a tile which hasn't been previously visited
@@ -104,7 +105,7 @@ def depthFirstSearch(problem):
         for c in children:            
             if not graph.CheckPlace(c[0]):                         
                 nondouble.append(c)
-                graph.FillPlace(c[0])                      
+                graph.FillPlace(c[0], head)                      
                 stack.push(c)
         #if more than one child are created, remember the parent that created them so that path knows where to stop backing up
         #when it needs to find a new branch after a dead end
@@ -130,12 +131,9 @@ def depthFirstSearch(problem):
         if problem.isGoalState(head[0]):   
             found = True
     
-    finalpath = []
-    #convert all tuples in path to directional commands and put them in a list
-    #reverse finalpath, we want the first commands that were added to be executed first    
-    while not path.isEmpty():
-        finalpath.append(GetDirection(path.pop()[1]))
-    finalpath.reverse()
+    # graph has a grid which keeps track of which nodes were added by which nodes
+    # using this grid, we can reverse engineer the path to the end if we know where the path starts and ends
+    finalpath = graph.GetPath(head, start)
     return finalpath  
 
 def breadthFirstSearch(problem):
@@ -178,31 +176,39 @@ def GetDirection(direction):
     if direction == 'West':
         return w
 
-def GetChildren(node, graph, stack, problem):
-    children = problem.getSuccessors(node[0])
-    nondouble = []     
-    for c in children:            
-        if not graph.CheckPlace(c[0]):
-            nondouble.append(c)
-            graph.FillPlace(c[0])                                
-            stack.push(c)
-    return nondouble
-
 
 class Graph:
     matrix = [[]]
+    previous = [[]]
 
     def CreateGraph(self, position):
         global matrix
-        matrix = [[False for x in range(position[0])] for y in range(position[1])] 
+        global previous
+        matrix = [[False for x in range(position[0])] for y in range(position[1])]
+        previous = [[((-1,-1),'Nothing') for x in range(position[0])] for y in range(position[1])]
         return matrix
     
-    def FillPlace(self, position):
+    def FillPlace(self, position, origin):
         global matrix
+        global previous
         matrix [(position[0])][(position[1])] = True
+        previous [(position[0])][(position[1])] = (origin[0], origin[1])        
 
     def CheckPlace(self, position):
         return matrix [(position[0])][(position[1])]
+
+    def GetPath(self, endnode, start):
+        global previous
+        path = []
+        i = (endnode[0], endnode[1])
+        print i
+        while not i[1] == 'Start':
+            path.append(GetDirection(i[1]))
+            a = (i[0])[0]
+            b = (i[0])[1]
+            i = previous[a][b]
+        path.reverse()
+        return path
 
 # Abbreviations
 bfs = breadthFirstSearch
