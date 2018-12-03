@@ -137,9 +137,31 @@ def depthFirstSearch(problem):
     return finalpath  
 
 def breadthFirstSearch(problem):
-    """Search the shallowest nodes in the search tree first."""
-    "*** YOUR CODE HERE ***"
-    util.raiseNotDefined()
+    
+    found = False
+    graph = Graph()
+    graph.CreateGraph((100,100))
+    queu = util.Queue()
+    head = (problem.getStartState(), 'Start', 1)
+    graph.FillPlace(head[0], head[0])
+    start = head[0]
+
+    while not found:
+        children = problem.getSuccessors(head[0])
+        for c in children:
+            if not graph.CheckPlace(c[0]):                         
+                graph.FillPlace(c[0], head)                      
+                queu.push(c)
+        head = queu.pop()
+        if problem.isGoalState(head[0]):   
+            found = True
+
+    finalpath = graph.GetPath(head, start)
+    return finalpath
+            
+
+        
+
 
 def uniformCostSearch(problem):
     """Search the node of least total cost first."""
