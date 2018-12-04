@@ -156,7 +156,39 @@ def nullHeuristic(state, problem=None):
 def aStarSearch(problem, heuristic=nullHeuristic):
     """Search the node that has the lowest combined cost and heuristic first."""
     "*** YOUR CODE HERE ***"
-    util.raiseNotDefined()
+    found = False
+    graph = Graph()
+    graph.CreateGraph((100,100))
+    start = problem.getStartState()
+    current = (start, 'Start', 0, 0)
+    #(position, gvalue, hvalue)
+    open = [current]
+    closed = []
+    graph.FillPlace(current[0], current)
+
+    while len(open) > 0 and not found:        
+        minimum = -1
+        for x in open:
+            if x[2] + x[3] < minimum or minimum < 0:
+                current = x
+                minimum = x[2] + x[3]
+        open.remove(current)
+        closed.append(current)
+        children = problem.getSuccessors(current[0])
+        nondouble = []
+        for c in children:            
+            if not graph.CheckPlace(c[0]):                         
+                nondouble.append(c)
+                graph.FillPlace(c[0], current)                      
+                open.append(((c[0]), c[1], current[2] + 1, heuristic(c[0], problem)))
+                if problem.isGoalState(c[0]):
+                    current = c
+                    found = True
+                    break
+    
+    print start
+    finalpath = graph.GetPath(current, start)
+    return finalpath
 
 def GetPosition(self, instance):
     return instance[0]
