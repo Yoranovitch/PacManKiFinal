@@ -143,6 +143,7 @@ def breadthFirstSearch(problem):
     graph.CreateGraph((100,100))
     queu = util.Queue()
     head = (problem.getStartState(), 'Start', 1)
+
     graph.FillPlace(head[0], head[0])
     start = head[0]
 
@@ -158,9 +159,6 @@ def breadthFirstSearch(problem):
 
     finalpath = graph.GetPath(head, start)
     return finalpath
-            
-
-        
 
 
 def uniformCostSearch(problem):
@@ -208,7 +206,6 @@ def aStarSearch(problem, heuristic=nullHeuristic):
                     found = True
                     break
     
-    print start
     finalpath = graph.GetPath(current, start)
     return finalpath
 
@@ -255,7 +252,6 @@ class Graph:
         global previous
         path = []
         i = (endnode[0], endnode[1])
-        print i
         while not i[1] == 'Start':
             path.append(GetDirection(i[1]))
             a = (i[0])[0]
