@@ -167,14 +167,17 @@ def uniformCostSearch(problem):
     head = (problem.getStartState(), 'Start', 1)
     graph.FillPlace(head[0], head[0])
     start = head[0]
-
+    
     while not found:
         children = problem.getSuccessors(head[0])
         for c in children:
             if not graph.CheckPlace(c[0]):
                 graph.FillPlace(c[0], head)
+                #put the child node in the priority queue with its priority value
                 pqueue.push(c,c[2])
-        head = pqueue.pop()      
+        #use the child node with the highest priority first
+        head = pqueue.pop()
+        #if the given child node is the goal then return      
         if problem.isGoalState(head[0]):   
             found = True
 
@@ -197,7 +200,6 @@ def aStarSearch(problem, heuristic=nullHeuristic):
     graph.CreateGraph((100,100))
     start = problem.getStartState()
     current = (start, 'Start', 0, 0)
-    #(position, gvalue, hvalue)
     open = [current]
     closed = []
     graph.FillPlace(current[0], current)
@@ -205,6 +207,7 @@ def aStarSearch(problem, heuristic=nullHeuristic):
     while len(open) > 0 and not found:        
         minimum = -1
         for x in open:
+            #chose the node with the lowest f(n)
             if x[2] + x[3] < minimum or minimum < 0:
                 current = x
                 minimum = x[2] + x[3]
@@ -215,7 +218,8 @@ def aStarSearch(problem, heuristic=nullHeuristic):
         for c in children:            
             if not graph.CheckPlace(c[0]):                         
                 nondouble.append(c)
-                graph.FillPlace(c[0], current)                      
+                graph.FillPlace(c[0], current)
+                #put the child node in the list with its heuristic
                 open.append(((c[0]), c[1], current[2] + 1, heuristic(c[0], problem)))
                 if problem.isGoalState(c[0]):
                     current = c
