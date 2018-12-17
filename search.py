@@ -138,6 +138,7 @@ def depthFirstSearch(problem):
 
 def breadthFirstSearch(problem):
     
+    #create the necessary graph and queu and fill the start place
     found = False
     graph = Graph()
     graph.CreateGraph((100,100))
@@ -146,8 +147,10 @@ def breadthFirstSearch(problem):
     graph.FillPlace(head[0], head[0])
     start = head[0]
 
+    #As long as the goal isn't found keep searching
     while not found:
         children = problem.getSuccessors(head[0])
+        #If you haven't already been there add it into the queu
         for c in children:
             if not graph.CheckPlace(c[0]):                         
                 graph.FillPlace(c[0], head)                      
@@ -156,6 +159,7 @@ def breadthFirstSearch(problem):
         if problem.isGoalState(head[0]):   
             found = True
 
+    #Create the right path and return it
     finalpath = graph.GetPath(head, start)
     return finalpath
             
@@ -226,7 +230,6 @@ def aStarSearch(problem, heuristic=nullHeuristic):
                     found = True
                     break
     
-    print start
     finalpath = graph.GetPath(current, start)
     return finalpath
 
@@ -253,6 +256,8 @@ class Graph:
     matrix = [[]]
     previous = [[]]
 
+    #Creates a graph(two dimensional array) which holds true if you've been there already and a
+    #two dimensional array which holds the position from which you came
     def CreateGraph(self, position):
         global matrix
         global previous
@@ -260,20 +265,22 @@ class Graph:
         previous = [[((-1,-1),'Nothing') for x in range(position[0])] for y in range(position[1])]
         return matrix
     
+    #Stores if that you have been in that place and from where you came
     def FillPlace(self, position, origin):
         global matrix
         global previous
         matrix [(position[0])][(position[1])] = True
         previous [(position[0])][(position[1])] = (origin[0], origin[1])        
 
+    #Checks if you've already been there
     def CheckPlace(self, position):
         return matrix [(position[0])][(position[1])]
 
+    #Gets the path from the end that you have found to the start and returns them in a list
     def GetPath(self, endnode, start):
         global previous
         path = []
         i = (endnode[0], endnode[1])
-        print i
         while not i[1] == 'Start':
             path.append(GetDirection(i[1]))
             a = (i[0])[0]
