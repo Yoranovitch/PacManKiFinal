@@ -182,7 +182,6 @@ def uniformCostSearch(problem):
     finalpath = graph.GetPath(head, start)
     return finalpath
 
-
 def nullHeuristic(state, problem=None):
     """
     A heuristic function estimates the cost from the current state to the nearest
@@ -226,24 +225,16 @@ def aStarSearch(problem, heuristic=nullHeuristic):
     finalpath = graph.GetPath(current, start)
     return finalpath
 
-def GetPosition(self, instance):
-    return instance[0]
-
 def GetDirection(direction):
     from game import Directions
-    n = Directions.NORTH
-    e = Directions.EAST
-    s = Directions.SOUTH
-    w = Directions.WEST
     if direction == 'North':
-        return n
+        return Directions.NORTH
     if direction == 'East':
-        return e
+        return Directions.EAST
     if direction == 'South':
-        return s
+        return Directions.SOUTH
     if direction == 'West':
-        return w
-
+        return Directions.WEST
 
 class Graph:
     matrix = [[]]
@@ -259,6 +250,7 @@ class Graph:
     def FillPlace(self, position, origin):
         global matrix
         global previous
+
         matrix [(position[0])][(position[1])] = True
         previous [(position[0])][(position[1])] = (origin[0], origin[1])        
 
